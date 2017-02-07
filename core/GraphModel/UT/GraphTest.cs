@@ -81,6 +81,19 @@ namespace UT
     }
 
     [TestMethod]
+    public void Test_AddEdge_Weights()
+    {
+      Graph g = null;
+      IEdge e = null;
+
+      g = new Graph();
+      e = g.AddEdge(null, null,350,200.1);
+
+      Assert.AreEqual(350, e.Weight);
+      Assert.AreEqual(200.1, e.Proximity);
+    }
+
+    [TestMethod]
     public void Test_AddEdge_TargetOnly()
     {
       Graph g = null;
