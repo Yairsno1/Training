@@ -81,16 +81,15 @@ namespace UT
     }
 
     [TestMethod]
-    public void Test_AddEdge_Weights()
+    public void Test_AddEdge_Weight()
     {
       Graph g = null;
       IEdge e = null;
 
       g = new Graph();
-      e = g.AddEdge(null, null,350,200.1);
+      e = g.AddEdge(null, null,350.03);
 
-      Assert.AreEqual(350, e.Weight);
-      Assert.AreEqual(200.1, e.Proximity);
+      Assert.AreEqual(350.03, e.Weight);
     }
 
     [TestMethod]
@@ -281,6 +280,29 @@ namespace UT
       Assert.IsNotNull(eActual);
     }
 
+    [TestMethod]
+    public void Test_TriangleGraph_H()
+    {
+      Graph g = null;
+      IVertex v1 = null;
+      IVertex v2 = null;
+      IVertex v3 = null;
+      double v2v1H = -1;
+      double v2v3H = -1;
+
+      g = CreateTriangleG();
+
+      v1 = g.Vertices["V1"];
+      v2 = g.Vertices["V2"];
+      v3 = g.Vertices["V3"];
+
+      v2v1H = g.Approximations.GetH(v2,v1);
+      v2v3H = g.Approximations.GetH(v2, v3);
+
+      Assert.AreEqual(4, v2v1H);
+      Assert.AreEqual(2, v2v3H);
+    }
+
     private Graph CreateTriangleG()
     {
       Graph g = null;
@@ -291,6 +313,7 @@ namespace UT
       IEdge e13 = null;
       IEdge e21 = null;
       IEdge e32 = null;
+      Approximations H = null;
 
       g = new Graph();
 
@@ -298,10 +321,15 @@ namespace UT
       v2 = g.AddVertex("V2");
       v3 = g.AddVertex("V3");
 
-      e11 = g.AddEdge(v1, v2);
-      e21 = g.AddEdge(v2, v1);
-      e13 = g.AddEdge(v1, v3);
-      e32 = g.AddEdge(v3, v2);
+      e11 = g.AddEdge(v1, v2, 5);
+      e21 = g.AddEdge(v2, v1, 5);
+      e13 = g.AddEdge(v1, v3, 7);
+      e32 = g.AddEdge(v3, v2, 3);
+
+      H = new Approximations();
+      H.SetH(v2, v3, 2);
+      H.SetH(v2, v1, 4);
+      g.Approximations = H;
 
       return g;
     }
