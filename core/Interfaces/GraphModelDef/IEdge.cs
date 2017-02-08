@@ -11,7 +11,6 @@ namespace YS.Training.Core.Interfaces.GraphModelDef
     bool HasSourceVertex { get; }
     bool HasTargetVertex { get; }
     string Id { get; }
-    double Proximity { get; set; }
     IVertex Source { get; }
     IVertex Target { get; }
     double Weight { get; set; }    

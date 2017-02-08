@@ -18,10 +18,10 @@ namespace YS.Training.Core.Interfaces.GraphModelDef
     IEdges Edges { get; }
     string Name { get; set; }
     IVertices Vertices { get; }
+    IApproximations Approximations { get; set; }
 
     IEdge AddEdge(IVertex source, IVertex target);
     IEdge AddEdge(IVertex source, IVertex target, double weight);
-    IEdge AddEdge(IVertex source, IVertex target, double weight, double proximity);
     IVertex AddVertex(string vertexName);
     void DeleteEdge(IEdge edge);
     void DeleteVertex(IVertex vertex);
