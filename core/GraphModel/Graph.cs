@@ -13,6 +13,7 @@ namespace YS.Training.Core.GraphModel
     private Vertices m_vertices;
     private string m_desc;
     private string m_name;
+    private IApproximations m_approxs;
 
     public Graph()
     {
@@ -20,11 +21,13 @@ namespace YS.Training.Core.GraphModel
       m_vertices = new Vertices();
       m_name = string.Empty;
       m_desc = string.Empty;
+      m_approxs = new Approximations();
     }
 
 
        #region IGraph implementation
-    public IEdge AddEdge(IVertex p_source, IVertex p_target, double p_weight, double p_proximity)
+
+    public IEdge AddEdge(IVertex p_source, IVertex p_target, double p_weight)
     {
       Edge rv = null;
       Vertex srcVertex = null;
@@ -37,20 +40,14 @@ namespace YS.Training.Core.GraphModel
         srcVertex.AddOutEdge(rv);
       }
       rv.Weight = p_weight;
-      rv.Proximity = p_proximity;
       m_edges.Add(rv);
 
       return rv;
     }
 
-    public IEdge AddEdge(IVertex p_source, IVertex p_target, double p_weight)
-    {
-      return AddEdge(p_source, p_target, p_weight, 0);
-    }
-
     public IEdge AddEdge(IVertex p_source, IVertex p_target)
     {
-      return AddEdge(p_source, p_target, 0, 0);
+      return AddEdge(p_source, p_target, 0);
     }
 
     public IVertex AddVertex(string p_vertexName)
@@ -66,6 +63,18 @@ namespace YS.Training.Core.GraphModel
       m_vertices.Add(rv);
 
       return rv;
+    }
+
+    public IApproximations Approximations
+    {
+      get
+      {
+        return m_approxs;
+      }
+      set
+      {
+        m_approxs = value;
+      }
     }
 
     public void DeleteEdge(IEdge p_edge)
@@ -127,6 +136,7 @@ namespace YS.Training.Core.GraphModel
         m_name = value;
       }
     }
+
 
     public IVertices Vertices
     {

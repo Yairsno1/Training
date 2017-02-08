@@ -13,7 +13,6 @@ namespace YS.Training.Core.GraphModel
     private Vertex m_source;
     private Vertex m_target;
     private double m_weight;
-    private double m_proximityH;
     private string m_id;
 
     public Edge(Vertex p_source, Vertex p_target)
@@ -22,7 +21,6 @@ namespace YS.Training.Core.GraphModel
       m_source = p_source;
       m_target = p_target;
       m_weight = 0;
-      m_proximityH = 0;
 
     }
 
@@ -48,18 +46,6 @@ namespace YS.Training.Core.GraphModel
       get
       {
         return m_id;
-      }
-    }
-
-    public double Proximity
-    {
-      get
-      {
-        return m_proximityH;
-      }
-      set
-      {
-        m_proximityH = value;
       }
     }
 
