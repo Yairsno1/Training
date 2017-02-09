@@ -26,17 +26,6 @@ namespace YS.Training.Core.GraphModel
     {
       Graph rv = null;
       GraphInformation gInfo = null;
-      List<VertexItem> verticesInfo = null;
-      int i = 0;
-      VertexItem vi = null;
-      Vertex srcV = null;
-      Vertex targetV = null;
-      List<EdgeItem> vEdgesInfo = null;
-      int j = 0;
-      double weight = 0;
-      Approximations approxs = null;
-      List<ApproximationItem> approximationsInfo = null;
-      ApproximationItem ai = null;
 
       if (string.IsNullOrEmpty(p_graphInformationFile))
       {
@@ -60,20 +49,7 @@ namespace YS.Training.Core.GraphModel
 
       CreateVertices(rv, gInfo);
       RouteEdges(rv, gInfo);
-
-
-      approxs = new Approximations();
-      approximationsInfo = gInfo.ApproximationCollection;
-      for (i = 0; i < approximationsInfo.Count; i++)
-      {
-        ai = approximationsInfo[i];
-
-        srcV = rv.Vertices[ai.Source] as Vertex;
-        targetV = rv.Vertices[ai.Target] as Vertex;
-        double approxVal = Convert.ToDouble(ai.aproximation);
-        approxs.SetH(srcV, targetV, approxVal);
-      }
-      rv.Approximations = approxs;
+      LoadApproximationsTable(rv, gInfo);
 
       return rv;
     }
@@ -105,12 +81,34 @@ namespace YS.Training.Core.GraphModel
                         string.Format(CultureInfo.InvariantCulture,
                         "Vertices with the same name found; {0}",vi.Name));
         }
-        catch
-        {
-          throw;
-        }
       }
     }
+
+    private void LoadApproximationsTable(Graph p_graph, GraphInformation p_graphInfo)
+    {
+      Approximations approxs = null;
+      List<ApproximationItem> approximationsInfo = null;
+      int i = 0;
+      ApproximationItem ai = null;
+      Vertex srcV = null;
+      Vertex targetV = null;
+
+      approxs = new Approximations();
+      approximationsInfo = p_graphInfo.ApproximationCollection;
+
+      for (i = 0; i < approximationsInfo.Count; i++)
+      {
+        ai = approximationsInfo[i];
+
+        srcV = p_graph.Vertices[ai.Source] as Vertex;
+        targetV = p_graph.Vertices[ai.Target] as Vertex;
+        double approxVal = Convert.ToDouble(ai.aproximation);
+        approxs.SetH(srcV, targetV, approxVal);
+      }
+
+      p_graph.Approximations = approxs;
+    }
+
     private void RouteEdges(Graph p_graph, GraphInformation p_graphInfo)
     {
       List<VertexItem> verticesInfo = null;
@@ -122,8 +120,6 @@ namespace YS.Training.Core.GraphModel
       int j = 0;
       double weight = 0;
 
-      //key not found
-      //invalid operation
       verticesInfo = p_graphInfo.VertexCollection;
       for (i = 0; i < verticesInfo.Count; i++)
       {
@@ -134,9 +130,33 @@ namespace YS.Training.Core.GraphModel
         for (j = 0; j < vEdgesInfo.Count; j++)
         {
           string targetName = vEdgesInfo[j].Target;
-          targetV = string.IsNullOrEmpty(targetName) ? null : p_graph.Vertices[targetName] as Vertex;
-          weight = Convert.ToDouble(vEdgesInfo[j].Weight);
-          p_graph.AddEdge(srcV, targetV, weight);
+          try
+          {
+            targetV = string.IsNullOrEmpty(targetName) ? null : p_graph.Vertices[targetName] as Vertex;
+            weight = Convert.ToDouble(vEdgesInfo[j].Weight);
+            p_graph.AddEdge(srcV, targetV, weight);
+          }
+          catch (KeyNotFoundException)
+          {
+            throw new EdgeInfoEndNotExistsException(
+                  string.Format(CultureInfo.InvariantCulture,
+                                "Route edge from {0} failed, end vertex {1} does not exist.",
+                                vi.Name, targetV));
+          }
+          catch (InvalidOperationException)
+          {
+            throw new EdgeInfoEndDuplicationException(
+                   string.Format(CultureInfo.InvariantCulture,
+                                 "Route edge from {0} failed, duplicate route to end vertex {1}.",
+                                  vi.Name, targetName));
+          }
+          catch (FormatException)
+          {
+            throw new FormatException(
+                   string.Format(CultureInfo.InvariantCulture,
+                                  "Weight [{0}] data for edge {1} ==> {2} is not a number in a valid format.",
+                                   vEdgesInfo[j].Weight, vi.Name, targetName));
+          }
         }
       }
     }
