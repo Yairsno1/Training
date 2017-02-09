@@ -58,41 +58,9 @@ namespace YS.Training.Core.GraphModel
       rv.Name = gInfo.Name;
       rv.Description = gInfo.Description;
 
-      verticesInfo = gInfo.VertexCollection;
-      try
-      {
-        for (i = 0; i < verticesInfo.Count; i++)
-        {
-          vi = verticesInfo[i];
-          rv.AddVertex(vi.Name);
-        }
-      }
-      catch (ArgumentException)
-      {
-        throw new VertexInfoEmptyNameException(string.Format(CultureInfo.InvariantCulture,"Vertex without name found"));
-      }
-      catch (InvalidOperationException)
-      {
-        throw new VertexInfoDuplicationException(string.Format(CultureInfo.InvariantCulture, "Vertices with the sane name found"));
-      }
-      catch 
-      {
-        throw;
-      }
+      CreateVertices(rv, gInfo);
+      RouteEdges(rv, gInfo);
 
-      for (i = 0; i < verticesInfo.Count; i++)
-      {
-        vi = verticesInfo[i];
-        srcV = rv.Vertices[vi.Name] as Vertex;
-
-        vEdgesInfo = vi.EdgeCollection;
-        for (j=0; j<vEdgesInfo.Count; j++)
-        {
-          targetV = rv.Vertices[vEdgesInfo[j].Target] as Vertex;
-          weight = Convert.ToDouble(vEdgesInfo[j].Weight);
-          rv.AddEdge(srcV, targetV, weight);
-        }
-      }
 
       approxs = new Approximations();
       approximationsInfo = gInfo.ApproximationCollection;
@@ -109,6 +77,70 @@ namespace YS.Training.Core.GraphModel
 
       return rv;
     }
+
+    private void CreateVertices(Graph p_graph, GraphInformation p_graphInfo)
+    {
+      List<VertexItem> verticesInfo = null;
+      int i = 0;
+      VertexItem vi = null;
+
+      verticesInfo = p_graphInfo.VertexCollection;
+      for (i = 0; i < verticesInfo.Count; i++)
+      {
+        vi = verticesInfo[i];
+        try
+        {
+          p_graph.AddVertex(vi.Name);
+        }
+        catch (ArgumentException)
+        {
+          throw new VertexInfoEmptyNameException(
+                      string.Format(CultureInfo.InvariantCulture,
+                                    "Vertex [#{0}] without name found",
+                                    i+1));
+        }
+        catch (InvalidOperationException)
+        {
+          throw new VertexInfoDuplicationException(
+                        string.Format(CultureInfo.InvariantCulture,
+                        "Vertices with the same name found; {0}",vi.Name));
+        }
+        catch
+        {
+          throw;
+        }
+      }
+    }
+    private void RouteEdges(Graph p_graph, GraphInformation p_graphInfo)
+    {
+      List<VertexItem> verticesInfo = null;
+      int i = 0;
+      VertexItem vi = null;
+      Vertex srcV = null;
+      Vertex targetV = null;
+      List<EdgeItem> vEdgesInfo = null;
+      int j = 0;
+      double weight = 0;
+
+      //key not found
+      //invalid operation
+      verticesInfo = p_graphInfo.VertexCollection;
+      for (i = 0; i < verticesInfo.Count; i++)
+      {
+        vi = verticesInfo[i];
+        srcV = p_graph.Vertices[vi.Name] as Vertex;
+
+        vEdgesInfo = vi.EdgeCollection;
+        for (j = 0; j < vEdgesInfo.Count; j++)
+        {
+          string targetName = vEdgesInfo[j].Target;
+          targetV = string.IsNullOrEmpty(targetName) ? null : p_graph.Vertices[targetName] as Vertex;
+          weight = Convert.ToDouble(vEdgesInfo[j].Weight);
+          p_graph.AddEdge(srcV, targetV, weight);
+        }
+      }
+    }
+
 
   }
 }
