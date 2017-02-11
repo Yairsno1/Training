@@ -19,7 +19,7 @@ namespace YS.Training.Core.GraphModel
 
     public void Serialize(Graph p_graph, string p_graphInformationFile)
     {
-
+      throw new NotImplementedException("Todo ...");
     }
 
     public Graph Deserialize(string p_graphInformationFile)
@@ -29,11 +29,14 @@ namespace YS.Training.Core.GraphModel
 
       if (string.IsNullOrEmpty(p_graphInformationFile))
       {
-        throw new ArgumentException("p_graphInformationFile", "Graph information file path can not be null or empty");
+        throw new ArgumentException("p_graphInformationFile",
+                                    "Graph information file path can not be null or empty");
       }
       else if (!File.Exists(p_graphInformationFile))
       {
-        throw new FileNotFoundException("Graph information file " + p_graphInformationFile + " does not exist");
+        throw new FileNotFoundException("Graph information file " +
+                                        p_graphInformationFile + 
+                                        " does not exist");
       }
 
       XmlSerializer serializer = new XmlSerializer(typeof(GraphInformation));
@@ -100,10 +103,30 @@ namespace YS.Training.Core.GraphModel
       {
         ai = approximationsInfo[i];
 
-        srcV = p_graph.Vertices[ai.Source] as Vertex;
-        targetV = p_graph.Vertices[ai.Target] as Vertex;
-        double approxVal = Convert.ToDouble(ai.aproximation);
-        approxs.SetH(srcV, targetV, approxVal);
+        try
+        {
+          srcV = p_graph.Vertices[ai.Source] as Vertex;
+          targetV = p_graph.Vertices[ai.Target] as Vertex;
+        }
+        catch (KeyNotFoundException)
+        {
+          throw new EdgeInfoEndNotExistsException(
+                  string.Format(CultureInfo.InvariantCulture,
+                                "Vertex for {0} ==> {1} approximation does not exist.",
+                                ai.Source, ai.Target));
+        }
+        try
+        {
+          double approxVal = Convert.ToDouble(ai.aproximation);
+          approxs.SetH(srcV, targetV, approxVal);
+        }
+        catch (FormatException)
+        {
+          throw new FormatException(
+                 string.Format(CultureInfo.InvariantCulture,
+                                "Approximation [{0}] value for edge {1} ==> {2} is not a number in a valid format.",
+                                 ai.aproximation, ai.Source, ai.Target));
+        }
       }
 
       p_graph.Approximations = approxs;
