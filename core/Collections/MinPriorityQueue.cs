@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YS.Training.Core.Collections
 {
-  public class MinPriorityQueue<I> : PriorityQueue<I> where I : IComparable
+  public class MinPriorityQueue<I> : PriorityQueue<I> where I : IComparable<I>
   {
     public MinPriorityQueue() : base()
     { }
@@ -17,7 +17,7 @@ namespace YS.Training.Core.Collections
 
     protected override bool HasPriority(I p_lhs, I p_rhs)
     {
-      return (p_lhs as IComparable).CompareTo(p_rhs) < 0;
+      return (p_lhs as IComparable<I>).CompareTo(p_rhs) < 0;
     }
   }
 }

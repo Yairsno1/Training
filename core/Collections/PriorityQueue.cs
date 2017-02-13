@@ -11,7 +11,7 @@ namespace YS.Training.Core.Collections
   /// https://he.wikipedia.org/wiki/%D7%A2%D7%A8%D7%99%D7%9E%D7%94_%D7%91%D7%99%D7%A0%D7%90%D7%A8%D7%99%D7%AA
   /// </summary>
   /// <typeparam name="I">The type of the queue's items.</typeparam>
-  public abstract class PriorityQueue<I> where I : IComparable
+  public abstract class PriorityQueue<I> where I : IComparable<I>
   {
     private const int M_DEFAULT_CAPACITY = 64;
 
@@ -44,6 +44,11 @@ namespace YS.Training.Core.Collections
       }
     }
 
+    public bool Contains(I p_item)
+    {
+      return (null == p_item) ? false : (IndexOf(p_item) > -1);
+    }
+
     public int Count
     {
       get
@@ -59,18 +64,7 @@ namespace YS.Training.Core.Collections
       rv = Peek();
       if (m_size > 0)
       {
-        if (1 == m_size)
-        {
-          m_items[0] = default(I);
-        }
-        else
-        {
-          m_items[0] = m_items[m_size - 1];
-          m_items[m_size - 1] = default(I);
-        }
-        --m_size;
-
-        BubbleDown(0);
+        RemoveAt(0);
       }
 
       return rv;
@@ -78,32 +72,16 @@ namespace YS.Training.Core.Collections
 
     public void Enqueue(I p_item)
     {
-      int insertedIndex = -1;
-      int parentIndex = -1;
-
       if (m_size == Capacity)
       {
         Resize(m_size * 2);
       }
 
       //Insert the new item at the end of the array
-      insertedIndex = m_size;
       m_items[m_size++] = p_item;
 
       //Bubble it up as long as it has priority over its parent.
-      while (insertedIndex > 0) //==0 => root.
-      {
-        parentIndex = (insertedIndex - 1) / 2;
-        if (HasPriority(m_items[insertedIndex], m_items[parentIndex]))
-        {
-          Swap(insertedIndex, parentIndex);
-          insertedIndex = parentIndex;
-        }
-        else
-        {
-          insertedIndex = -1;
-        }
-      }
+      BubbleUp(m_size-1);
     }
 
     public bool IsEmpty
@@ -119,6 +97,17 @@ namespace YS.Training.Core.Collections
       return m_size > 0 ? m_items[0] : default(I);
     }
 
+    public void Remove(I p_item)
+    {
+      int removedIndex = -1;
+
+      removedIndex = IndexOf(p_item);
+      if (removedIndex > -1)
+      {
+        RemoveAt(removedIndex);
+      }
+    }
+
     /// <summary>
     /// Gets if an item should have priotity over other.
     /// </summary>
@@ -130,8 +119,9 @@ namespace YS.Training.Core.Collections
     /// </returns>
     protected abstract bool HasPriority(I p_lhs, I p_rhs);
 
-    private void BubbleDown(int p_itemIndex)
+    private bool BubbleDown(int p_itemIndex)
     {
+      bool rv = false;
       int currIndex = -1;
       int leftIndex = -1;
       int rightIndex = -1;
@@ -165,11 +155,72 @@ namespace YS.Training.Core.Collections
           {
             Swap(currIndex, chosenChild);
             currIndex = chosenChild;
+            rv = true;
           }
           else
           {
             break;
           }
+        }
+      }
+
+      return rv;
+    }
+
+    private bool BubbleUp(int p_itemIndex)
+    {
+      bool rv = false;
+      int currIndex = -1;
+      int parentIndex = -1;
+
+      currIndex = p_itemIndex;
+      while (currIndex > 0) //==0 => root.
+      {
+        parentIndex = (currIndex - 1) / 2;
+        if (HasPriority(m_items[currIndex], m_items[parentIndex]))
+        {
+          Swap(currIndex, parentIndex);
+          currIndex = parentIndex;
+          rv = true;
+        }
+        else
+        {
+          currIndex = -1;
+        }
+      }
+
+      return rv;
+    }
+
+    private int IndexOf(I p_item)
+    {
+      int rv = -1;
+      for (int i=0; i<m_size; i++)
+      {
+        if (m_items[i].Equals(p_item))
+        {
+          rv = i;
+          break;
+        }
+      }
+
+      return rv;
+    }
+
+    private void RemoveAt(int p_itemIndex)
+    {
+      if ((m_size - 1) == p_itemIndex) //last
+      {
+        m_items[--m_size] = default(I);
+      }
+      else
+      {
+        m_items[p_itemIndex] = m_items[m_size - 1];
+        m_items[--m_size] = default(I);        
+
+        if (!BubbleDown(p_itemIndex))
+        {
+          BubbleUp(p_itemIndex);
         }
       }
     }
