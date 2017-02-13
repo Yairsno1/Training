@@ -182,6 +182,32 @@ namespace UT
     }
 
     [TestMethod]
+    public void Test_Contains()
+    {
+      PriorityQueue<double> q = null;
+
+      q = new MinPriorityQueue<double>();
+      q.Enqueue(3);
+      q.Enqueue(2);
+      q.Enqueue(1);
+
+      Assert.IsTrue(q.Contains(2));
+    }
+
+    [TestMethod]
+    public void Test_Contains_Not()
+    {
+      PriorityQueue<double> q = null;
+
+      q = new MinPriorityQueue<double>();
+      q.Enqueue(3);
+      q.Enqueue(2);
+      q.Enqueue(1);
+
+      Assert.IsFalse(q.Contains(4));
+    }
+
+    [TestMethod]
     public void Test_Dequeue_EmptyQ()
     {
       PriorityQueue<double> q = null;
@@ -204,6 +230,22 @@ namespace UT
       Assert.AreEqual(1, q.Dequeue());
       Assert.AreEqual(2, q.Dequeue());
       Assert.AreEqual(3, q.Dequeue());
+    }
+
+    [TestMethod]
+    public void Test_PriorityUpgrade()
+    {
+      PriorityQueue<double> q = null;
+
+      q = new MinPriorityQueue<double>();
+      q.Enqueue(30);
+      q.Enqueue(20);
+      q.Enqueue(10);
+
+      q.Remove(20);
+      q.Enqueue(5);
+
+      Assert.AreEqual(5, q.Peek());
     }
 
     [TestMethod]
@@ -259,6 +301,31 @@ namespace UT
       }
     }
 
+    [TestMethod]
+    public void Test_Remove()
+    {
+      PriorityQueue<double> q = null;
+      double[] items = { 5, 85, 43, 2, 28, 99, 67, 1.98, 33, 19, 17, 44 };
+      SortedList<double, double> monitor = new SortedList<double, double>();
+
+      q = new MinPriorityQueue<double>(7);
+
+      for (int i = 0; i < items.Length; i++)
+      {
+        q.Enqueue(items[i]);
+        monitor.Add(items[i], items[i]);
+      }
+
+      q.Remove(43);
+      monitor.Remove(43);
+      q.Remove(17);
+      monitor.Remove(17);
+
+      foreach (double monitorItem in monitor.Values)
+      {
+        Assert.AreEqual(monitorItem, q.Dequeue());
+      }
+    }
 
   }
 }
