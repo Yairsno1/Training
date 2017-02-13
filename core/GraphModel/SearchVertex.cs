@@ -7,6 +7,9 @@ using YS.Training.Core.Interfaces.GraphModelDef;
 
 namespace YS.Training.Core.GraphModel
 {
+  /// <summary>
+  /// Represents vertex that expanded during path search.
+  /// </summary>
   internal class SearchVertex : IComparable<SearchVertex>
   {
     private IVertex m_subject;
@@ -21,8 +24,24 @@ namespace YS.Training.Core.GraphModel
     {
       m_subject = p_subject;
       m_prev = p_expandedFrom;
-      m_delta = (null == m_prev) ? p_expansionDelta : m_prev.m_delta + p_expansionDelta;
+      m_delta = (null == m_prev) ? 0 : m_prev.m_delta + p_expansionDelta;
       m_approximation = p_approximation;
+    }
+
+    public string Name
+    {
+      get
+      {
+        return m_subject.Name;
+      }
+    }
+
+    public IVertex GraphVertex
+    {
+      get
+      {
+        return m_subject;
+      }
     }
 
     public SearchVertex Prev

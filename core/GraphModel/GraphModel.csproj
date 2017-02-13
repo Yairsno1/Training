@@ -33,6 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Collections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Collections.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="GraphModelDef">
       <HintPath>..\..\bin\GraphModelDef.dll</HintPath>
       <Private>False</Private>
@@ -51,6 +56,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Edges.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="GraphExplorer.cs" />
     <Compile Include="GraphSerializer.cs" />
     <Compile Include="GraphXmlSchema\ApproximationItem.cs" />
     <Compile Include="GraphXmlSchema\EdgeInfoEndDuplicationException.cs" />
