@@ -1,0 +1,6 @@
+* Bug(?) fix: Graph::DeleteVertex - edges are updated.
+* Implement graph serialization.
+* Measure - Priority queue performance test
+* Generate and serialize huge graph.
+* Measure - A* performance test.
+* Implement verification that the approximations heuristic is admissible.
