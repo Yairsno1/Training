@@ -12,6 +12,7 @@ namespace YS.Training.Core.GraphModel
   {
     private LinkedList<SearchVertex> m_vertices;
     private Dictionary<string, LinkedListNode<SearchVertex>> m_verticesLookup;
+    private double m_weight;
 
     public SearchResultPath(SearchVertex p_goal)
     {
@@ -45,6 +46,11 @@ namespace YS.Training.Core.GraphModel
       string vertexName = string.Empty;
       LinkedListNode<SearchVertex> next = null;
 
+      if (null == p_sourceVertex)
+      {
+        throw new ArgumentNullException("p_sourceVertex", "Source vertex can not be null");
+      }
+
       vertexName = p_sourceVertex.Name;
       if (!m_verticesLookup.ContainsKey(vertexName))
       {
@@ -68,9 +74,12 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
-    public double Weight //redundant, remove from the interface
+    public double Weight
     {
-      get { throw new NotSupportedException(); }
+      get
+      {
+        return m_weight;
+      }
     }
       #endregion
 
@@ -78,7 +87,8 @@ namespace YS.Training.Core.GraphModel
     {
       SearchVertex currVertex = null;
 
-      currVertex = p_goal;
+      m_weight = p_goal.Delta;
+      currVertex = p_goal;      
       while (null != currVertex)
       {
         LinkedListNode<SearchVertex> node = m_vertices.AddFirst(currVertex);

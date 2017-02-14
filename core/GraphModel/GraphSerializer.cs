@@ -29,8 +29,7 @@ namespace YS.Training.Core.GraphModel
 
       if (string.IsNullOrEmpty(p_graphInformationFile))
       {
-        throw new ArgumentException("p_graphInformationFile",
-                                    "Graph information file path can not be null or empty");
+        throw new ArgumentException("Graph information file path can not be null or empty", "p_graphInformationFile");
       }
       else if (!File.Exists(p_graphInformationFile))
       {

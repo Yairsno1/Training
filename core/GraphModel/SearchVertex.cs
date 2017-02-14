@@ -28,11 +28,12 @@ namespace YS.Training.Core.GraphModel
       m_approximation = p_approximation;
     }
 
-    public string Name
+
+    public double Delta
     {
       get
       {
-        return m_subject.Name;
+        return m_delta;
       }
     }
 
@@ -41,6 +42,14 @@ namespace YS.Training.Core.GraphModel
       get
       {
         return m_subject;
+      }
+    }
+
+    public string Name
+    {
+      get
+      {
+        return m_subject.Name;
       }
     }
 
@@ -54,6 +63,11 @@ namespace YS.Training.Core.GraphModel
 
     public int CompareTo(SearchVertex p_other)
     {
+      if (null == p_other)
+      {
+        throw new ArgumentNullException("p_other", "other object to compare can not be null");
+      }
+
       return (m_delta + m_approximation).CompareTo(p_other.m_delta + p_other.m_approximation);
     }
   }
