@@ -7,10 +7,16 @@ using YS.Training.Core.Interfaces.GraphModelDef;
 
 namespace YS.Training.Core.GraphModel
 {
+  /// <summary>
+  /// Stores huristic estimation of the path cost between two vertices in a graph.
+  /// </summary>
   public class Approximations : IApproximations
   {
     private Dictionary<string, Dictionary<string, double>> m_aprroxsTable;
 
+    /// <summary>
+    /// Initializes Approximations instance.
+    /// </summary>
     public Approximations()
     {
       m_aprroxsTable = new Dictionary<string, Dictionary<string, double>>();
@@ -18,6 +24,12 @@ namespace YS.Training.Core.GraphModel
 
 
        #region IApproximations implementation
+    /// <summary>
+    /// Gets huristic estimation of the path cost from start to destination vertices.
+    /// </summary>
+    /// <param name="p_source">Vertex from.</param>
+    /// <param name="p_target">Vertex to.</param>
+    /// <returns>Huristic estimation, 0 if hueristic for the pair is missing.</returns>
     public double GetH(IVertex p_source, IVertex p_target)
     {
       double rv = 0;
@@ -49,6 +61,12 @@ namespace YS.Training.Core.GraphModel
     }
       #endregion
 
+    /// <summary>
+    /// Sets huristic estimation of the path cost from start to destination vertices.
+    /// </summary>
+    /// <param name="p_source">Vertex from.</param>
+    /// <param name="p_target">Vertex to.</param>
+    /// <param name="p_approximationValue">Estimation value.</param>
     public void SetH(IVertex p_source, IVertex p_target, double p_approximationValue)
     {
       string srcVName = string.Empty;

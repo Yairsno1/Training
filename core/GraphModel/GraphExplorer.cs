@@ -8,10 +8,18 @@ using YS.Training.Core.Interfaces.GraphModelDef;
 
 namespace YS.Training.Core.GraphModel
 {
+  /// <summary>
+  /// Exposes services to explore a graph.
+  /// </summary>
   public class GraphExplorer : IGraphExplorer
   {
     IGraph m_graph;
 
+    /// <summary>
+    /// Initializes GraphExplorer instance with the specified graph.
+    /// </summary>
+    /// <param name="p_explored">Graph to explore.</param>
+    /// <exception cref="ArgumentNullException">Graph is null.</exception>
     public GraphExplorer(IGraph p_explored)
     {
       if (null == p_explored)
@@ -23,6 +31,19 @@ namespace YS.Training.Core.GraphModel
     }
 
        #region IGraphExplorer
+    /// <summary>
+    /// Finds an efficiently directed path between specified start and destination(goal) vertices.
+    /// </summary>
+    /// <param name="p_start">The specific start of the search.</param>
+    /// <param name="p_destination">The search destination.</param>
+    /// <returns>The directed path between the specified start and destination, null if no such path exists.</returns>
+    /// <remarks>
+    /// <exception cref="ArgumentNullException">Start or destination is null.</exception>
+    /// The A* search algorithm is known due its performance and accuracy.
+    /// <para>
+    /// https://en.wikipedia.org/wiki/A*_search_algorithm
+    /// </para>
+    /// </remarks>
     public IPath AStar(IVertex p_start, IVertex p_destination)
     {
       SearchResultPath rv = null;
@@ -144,6 +165,9 @@ namespace YS.Training.Core.GraphModel
       return rv;
     }
 
+    /// <summary>
+    /// Gets the explored graph.
+    /// </summary>
     public IGraph Graph
     {
       get 

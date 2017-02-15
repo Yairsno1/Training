@@ -10,13 +10,26 @@ namespace YS.Training.Core.GraphModel
   /// <summary>
   /// Represents vertex that expanded during path search.
   /// </summary>
+  /// <remarks>
+  /// Search algorithms use this type of vertex to store information about
+  /// the vertices that founed during the search.
+  /// </remarks>
   internal class SearchVertex : IComparable<SearchVertex>
   {
-    private IVertex m_subject;
-    private SearchVertex m_prev;
-    private double m_delta;
-    private double m_approximation;
+    private IVertex m_subject; //Graph model vertex.
+    private SearchVertex m_prev; //The vertex we came from, helps to memorize the path.
+    private double m_delta; //Path cost from the start to this vertex.
+    private double m_approximation; //Hueristic estimation of the cost to gaol.
 
+    /// <summary>
+    /// Initialize SearchVertex instance that wraps the specified graph model vertex, points to
+    /// the vertex it came from, with the cost from the previous vertex
+    /// and the estimation of the cost to gaol.
+    /// </summary>
+    /// <param name="p_subject">The graph model vertex context.</param>
+    /// <param name="p_expandedFrom">The vertex that this vertex directly expanded from.</param>
+    /// <param name="p_expansionDelta">The weight from the previous version.</param>
+    /// <param name="p_approximation">Estimation of the cost to gaol.</param>
     public SearchVertex(IVertex p_subject,
                           SearchVertex p_expandedFrom,
                           double p_expansionDelta,

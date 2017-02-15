@@ -8,6 +8,13 @@ using YS.Training.Core.Interfaces.GraphModelDef;
 
 namespace YS.Training.Core.GraphModel
 {
+  /// <summary>
+  /// Represents directed edge that connects two graph vertices.
+  /// </summary>
+  /// <remarks>
+  /// Vertices ends are not mandatory, each side of the edge may or may not be connected to vertex,
+  /// e.g. edge may be "hanged".
+  /// </remarks>
   internal class Edge : IEdge
   {
     private Vertex m_source;
@@ -15,6 +22,11 @@ namespace YS.Training.Core.GraphModel
     private double m_weight;
     private string m_id;
 
+    /// <summary>
+    /// Initializes Edge instance with the specified out and in connections.
+    /// </summary>
+    /// <param name="p_source">Start end vertex, send null if the edge should not be connected at its out end.</param>
+    /// <param name="p_target">Target end vertex, send null if the edge should not be connected at its in end.</param>
     public Edge(Vertex p_source, Vertex p_target)
     {
       m_id = Guid.NewGuid().ToString("N").ToUpper(CultureInfo.InvariantCulture);
@@ -25,6 +37,9 @@ namespace YS.Training.Core.GraphModel
     }
 
        #region IEdge implementation
+    /// <summary>
+    /// Gets if the out end is connected to vertex.
+    /// </summary>
     public bool HasSourceVertex
     {
       get
@@ -33,6 +48,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets if the in end is connected to vertex.
+    /// </summary>
     public bool HasTargetVertex
     {
       get 
@@ -41,6 +59,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the edge id.
+    /// </summary>
     public string Id
     {
       get
@@ -49,6 +70,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the out end of the edge, null if does not exist.
+    /// </summary>
     public IVertex Source
     {
       get
@@ -57,6 +81,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the in end of the edge, null if does not exist.
+    /// </summary>
     public IVertex Target
     {
       get
@@ -65,6 +92,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets or sets the weight of the edge.
+    /// </summary>
     public double Weight
     {
       get
