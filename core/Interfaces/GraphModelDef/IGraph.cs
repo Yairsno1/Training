@@ -48,7 +48,7 @@ namespace YS.Training.Core.Interfaces.GraphModelDef
     IApproximations Approximations { get; set; }
 
     /// <summary>
-    /// Creates ans adds edge with the specified out end vertex, the specified in end vertex and no weight(cost).
+    /// Creates and adds edge with the specified out end vertex, the specified in end vertex and no weight(cost).
     /// </summary>
     /// <param name="source">The specific out end vertex, can be null.</param>
     /// <param name="target">The specific in end vertex, can be null.</param>
@@ -61,7 +61,7 @@ namespace YS.Training.Core.Interfaces.GraphModelDef
     IEdge AddEdge(IVertex source, IVertex target);
 
     /// <summary>
-    /// Creates ans adds edge with the specified out end vertex, the specified in end vertex and specified weight(cost).
+    /// Creates and adds edge with the specified out end vertex, the specified in end vertex and specified weight(cost).
     /// </summary>
     /// <param name="source">The specific out end vertex, can be null.</param>
     /// <param name="target">The specific in end vertex, can be null.</param>
