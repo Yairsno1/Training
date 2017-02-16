@@ -12,6 +12,9 @@ namespace YS.Training.Core.GraphModel
   /// </summary>
   /// <remarks>
   /// The graph may contain edges that are not connected at both ends.
+  /// This graph implemetation supports at most 1 directed edge between two non-null vertices,
+  /// in other words if exists edge from vertex "a" to vertex "b", another edge from vertex "a" to vertex "b"
+  /// can't be routed.
   /// </remarks>
   public class Graph : IGraph
   {

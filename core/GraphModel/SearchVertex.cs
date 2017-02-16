@@ -41,7 +41,9 @@ namespace YS.Training.Core.GraphModel
       m_approximation = p_approximation;
     }
 
-
+    /// <summary>
+    /// Gets the cost from the start to this vertex.
+    /// </summary>
     public double Delta
     {
       get
@@ -50,6 +52,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the graph model vertex
+    /// </summary>
     public IVertex GraphVertex
     {
       get
@@ -58,6 +63,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the name of the graph model vertex
+    /// </summary>
     public string Name
     {
       get
@@ -66,6 +74,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the vertex we came(expanded) from.
+    /// </summary>
     public SearchVertex Prev
     {
       get
@@ -74,6 +85,16 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Compares the score of this vertex to other vertex by means of
+    /// path weight + estimation hueristic.
+    /// </summary>
+    /// <param name="p_other">Vertex to compare with.</param>
+    /// <returns>
+    /// <para> Less than zero, this vertex score is better.</para>
+    /// <para> Zero, this vertex score is the same.</para>
+    /// <para> Greater than zero, this vertex score is worse.</para>
+    /// </returns>
     public int CompareTo(SearchVertex p_other)
     {
       if (null == p_other)

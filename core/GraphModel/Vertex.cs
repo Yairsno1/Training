@@ -8,11 +8,18 @@ using YS.Training.Core.Interfaces.GraphModelDef;
 
 namespace YS.Training.Core.GraphModel
 {
+  /// <summary>
+  /// Represents graph vertex(node).
+  /// </summary>
   internal class Vertex : IVertex
   {
     private string m_name;
-    private Edges m_outEdges;
+    private Edges m_outEdges; //The edges that routed off the vertex.
 
+    /// <summary>
+    /// Initializes Vertex instance with the specified name.
+    /// </summary>
+    /// <param name="p_name">The name of the vertex.</param>
     public Vertex(string p_name)
     {
       m_name = p_name;
@@ -20,6 +27,9 @@ namespace YS.Training.Core.GraphModel
     }
 
        #region IVertex implementation
+    /// <summary>
+    /// Gets the vertex name.
+    /// </summary>
     public string Name
     {
       get
@@ -28,6 +38,9 @@ namespace YS.Training.Core.GraphModel
       }
     }
 
+    /// <summary>
+    /// Gets the list of edges that route off the vertex.
+    /// </summary>
     public IEdges OutEdges
     {
       get
@@ -37,6 +50,13 @@ namespace YS.Training.Core.GraphModel
     }
       #endregion
 
+    /// <summary>
+    /// Route an edge from the vertex.
+    /// </summary>
+    /// <param name="p_outEdge">The edge to route.</param>
+    /// <exception cref="InvalidOperationException">
+    /// The edge is routed to non-null vertex which already has in-edge from this vertex.
+    /// </exception>
     internal void AddOutEdge(Edge p_outEdge)
     {
       if (p_outEdge.HasTargetVertex)
